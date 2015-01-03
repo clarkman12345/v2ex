@@ -1,7 +1,8 @@
 application: v2ex
 version: 1
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: yes
 
 default_expiration: "10d"
 
@@ -21,179 +22,176 @@ handlers:
   static_dir: static
 
 - url: /css/.*
-  script: css.py
+  script: css.application
 
 - url: /blog/([a-zA-Z0-9\_\-]+)
-  script: blog.py
+  script: blog.application
   
 - url: /entry/([0-9]+)
-  script: blog.py
+  script: blog.application
 
 - url: /settings
-  script: member.py
+  script: member.application
 
 - url: /settings/.*
-  script: member.py
+  script: member.application
 
 - url: /member/.*
-  script: member.py
+  script: member.application
 
 - url: /backstage
-  script: backstage.py
+  script: backstage.application
 
 - url: /backstage/.*
-  script: backstage.py
+  script: backstage.application
 
 - url: /new/.*
-  script: topic.py
+  script: topic.application
   
 - url: /t/.*
-  script: topic.py
+  script: topic.application
 
 - url: /r/.*
-  script: topic.py
+  script: topic.application
   
 - url: /edit/.*
-  script: topic.py
+  script: topic.application
   
 - url: /delete/.*
-  script: topic.py
+  script: topic.application
 
 - url: /hit/.*
-  script: topic.py
+  script: topic.application
 
 - url: /index/.*
-  script: topic.py
+  script: topic.application
   
 - url: /(avatar|navatar)/.*
-  script: avatar.py
+  script: avatar.application
 
 - url: /index.xml
-  script: feed.py
+  script: feed.application
   
 - url: /feed/v2ex.rss
-  script: feed.py
+  script: feed.application
 
 - url: /feed/(.+).xml
-  script: feed.py
+  script: feed.application
 
 - url: /about
-  script: page.py
+  script: page.application
   
 - url: /faq
-  script: page.py
+  script: page.application
 
 - url: /mission
-  script: page.py
+  script: page.application
 
 - url: /advertise
-  script: page.py
+  script: page.application
   
 - url: /advertisers
-  script: page.py
+  script: page.application
   
 - url: /notes/?
-  script: notes.py
+  script: notes.application
 
 - url: /notes/.*
-  script: notes.py
+  script: notes.application
 
 - url: /api/.*
-  script: api.py
+  script: api.application
 
 - url: /twitter/?
-  script: t.py
+  script: t.application
 
 - url: /twitter/.*
-  script: t.py
+  script: t.application
 
 - url: /time/?
-  script: misc.py
+  script: misc.application
 
 - url: /(md5|sha1)/?
-  script: misc.py
+  script: misc.application
 
 - url: /mapreduce(/.*)?
-  script: mapreduce/main.py
+  script: mapreduce.main.application
   login: admin
 
 - url: /images(/.*)?
-  script: images.py
+  script: images.application
 
 - url: /d/([0-9]+)?
-  script: images.py
+  script: images.application
 
 - url: /place/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
-  script: place.py
+  script: place.application
 
 - url: /remove/place_message/(.*)
-  script: place.py
+  script: place.application
  
 - url: /_ah/mail/.+
-  script: mail.py 
+  script: mail.application
   login: admin
 
 - url: /_ah/xmpp/.+
-  script: xmpp.py 
+  script: xmpp.application
   login: admin
 
 - url: /remote_api
-  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  script: google.appengine.ext.remote_api.handler
   login: admin
 
 - url: /block/(.*)
-  script: member.py
+  script: member.application
 
 - url: /unblock/(.*)
-  script: member.py
+  script: member.application
 
 - url: /favorite/(.*)
-  script: favorite.py
+  script: favorite.application
 
 - url: /unfavorite/(.*)
-  script: favorite.py
+  script: favorite.application
 
 - url: /follow/(.*)
-  script: favorite.py
+  script: favorite.application
 
 - url: /unfollow/(.*)
-  script: favorite.py
+  script: favorite.application
 
 - url: /my/(.*)
-  script: my.py
+  script: my.application
 
 - url: /add/star/(.*)
-  script: queue.py
+  script: queue.application
   login: admin
 
 - url: /minus/star/(.*)
-  script: queue.py
+  script: queue.application
   login: admin
 
 - url: /money/(.*)
-  script: money.py
+  script: money.application
 
 - url: /sso/(.*)
-  script: sso.py
+  script: sso.application
 
 - url: /notifications/?
-  script: notifications.py
+  script: notifications.application
 
 - url: /n/([a-z0-9]+).xml
-  script: notifications.py
+  script: notifications.application
     
 - url: /notifications/(.*)
-  script: notifications.py
+  script: notifications.application
 
 - url: /bfbcs/poke/(ps3|360|pc)/(.*)
-  script: misc.py
+  script: misc.application
 
 - url: .*
-  script: main.py
+  script: main.application
 
 inbound_services:
 - mail
 - xmpp_message
-
-builtins:
-- datastore_admin: off

@@ -121,15 +121,11 @@ class MyFollowingHandler(webapp.RequestHandler):
         else:
             self.redirect('/')
 
-def main():
-    application = webapp.WSGIApplication([
+application = webapp.WSGIApplication([
     ('/my/nodes', MyNodesHandler),
     ('/my/topics', MyTopicsHandler),
-    ('/my/following', MyFollowingHandler)
-    ],
-                                         debug=True)
-    util.run_wsgi_app(application)
+    ('/my/following', MyFollowingHandler)], debug=True)
 
 
 if __name__ == '__main__':
-    main()
+    util.run_wsgi_app(application)

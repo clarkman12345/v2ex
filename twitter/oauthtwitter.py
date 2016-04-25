@@ -6,7 +6,7 @@
 
 Requires:
   python-twitter
-  simplejson
+  json
   oauth
 '''
 
@@ -15,8 +15,8 @@ __version__ = "0.2"
 
 from twitter import Api, User
 
-from django.utils import simplejson
 import oauth
+import json
 
 # Taken from oauth implementation at: http://github.com/harperreed/twitteroauth-python/tree/master
 REQUEST_TOKEN_URL = 'https://twitter.com/oauth/request_token'
@@ -197,7 +197,7 @@ class OAuthApi(Api):
           Returns the twitter.User object
         '''
         json = self._FetchUrl(url)
-        data = simplejson.loads(json)
+        data = json.loads(json)
         self._CheckForTwitterError(data)
         return User.NewFromJsonDict(data)
         

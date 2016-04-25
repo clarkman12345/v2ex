@@ -357,7 +357,7 @@ class SigninHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'signin.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
-        
+
 class SignupHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()

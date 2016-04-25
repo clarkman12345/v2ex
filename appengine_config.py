@@ -16,3 +16,6 @@ def add_wheelhouse(path):
 
 wheelhouse = os.path.join(os.path.dirname(__file__), "wheelhouse")
 add_wheelhouse(wheelhouse)
+
+def webapp_django_setup():
+    pass

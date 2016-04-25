@@ -22,8 +22,6 @@ __version__ = '0.6-devel'
 
 from v2ex import TWITTER_API_ROOT
 
-from django.utils import simplejson
-
 import base64
 import calendar
 import os
@@ -39,6 +37,7 @@ import re
 import bitly
 import hashlib
 import logging
+import json
 
 try:
   from google.appengine.api import memcache
@@ -372,7 +371,7 @@ class Status(object):
     Returns:
       A JSON string representation of this twitter.Status instance
    '''
-    return simplejson.dumps(self.AsDict(), sort_keys=True)
+    return json.dumps(self.AsDict(), sort_keys=True)
 
   def AsDict(self):
     '''A dict representation of this twitter.Status instance.
@@ -872,7 +871,7 @@ class User(object):
     Returns:
       A JSON string representation of this twitter.User instance
    '''
-    return simplejson.dumps(self.AsDict(), sort_keys=True)
+    return json.dumps(self.AsDict(), sort_keys=True)
 
   def AsDict(self):
     '''A dict representation of this twitter.User instance.
@@ -1197,7 +1196,7 @@ class DirectMessage(object):
     Returns:
       A JSON string representation of this twitter.DirectMessage instance
    '''
-    return simplejson.dumps(self.AsDict(), sort_keys=True)
+    return json.dumps(self.AsDict(), sort_keys=True)
 
   def AsDict(self):
     '''A dict representation of this twitter.DirectMessage instance.
@@ -1351,7 +1350,7 @@ class Api(object):
       parameters['since_id'] = since_id
     url = TWITTER_API_ROOT + 'statuses/public_timeline.json'
     json = self._FetchUrl(url,  parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [Status.NewFromJsonDict(x) for x in data]
 
@@ -1401,7 +1400,7 @@ class Api(object):
     if since_id:
       parameters['since_id'] = since_id
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [Status.NewFromJsonDict(x) for x in data]
 
@@ -1451,14 +1450,14 @@ class Api(object):
     if since_id:
       parameters['since_id'] = since_id
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [Status.NewFromJsonDict(x) for x in data]
 
   def GetRateLimit(self):
     url = TWITTER_API_ROOT + 'account/rate_limit_status.json'
     json = self._FetchUrl(url)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     return data
     
   def GetListTimeline(self,
@@ -1494,7 +1493,7 @@ class Api(object):
       url = TWITTER_API_ROOT + '1/' + self._username + '/lists/' + list_id + '/statuses.json'
     parameters = {}
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [Status.NewFromJsonDict(x) for x in data]
 
@@ -1537,14 +1536,14 @@ class Api(object):
     else:
       url = TWITTER_API_ROOT + 'statuses/user_timeline.json'
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [Status.NewFromJsonDict(x) for x in data]
 
   def GetLists(self):
     url = TWITTER_API_ROOT + '/' + self._username + '/lists.json'
     json = self._FetchUrl(url)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     lists = []
     i = 0
     for alist in data['lists']:
@@ -1573,7 +1572,7 @@ class Api(object):
       raise TwitterError("id must be an long integer")
     url = TWITTER_API_ROOT + 'statuses/show/%s.json' % id
     json = self._FetchUrl(url)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return Status.NewFromJsonDict(data)
 
@@ -1596,7 +1595,7 @@ class Api(object):
       raise TwitterError("id must be an integer")
     url = TWITTER_API_ROOT + 'statuses/destroy/%s.json' % id
     json = self._FetchUrl(url, post_data={})
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return Status.NewFromJsonDict(data)
 
@@ -1631,7 +1630,7 @@ class Api(object):
     if in_reply_to_status_id:
       data['in_reply_to_status_id'] = in_reply_to_status_id
     json = self._FetchUrl(url, post_data=data)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return Status.NewFromJsonDict(data)
 
@@ -1694,7 +1693,7 @@ class Api(object):
     if page:
       parameters['page'] = page
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [Status.NewFromJsonDict(x) for x in data]
 
@@ -1720,7 +1719,7 @@ class Api(object):
     if page:
       parameters['page'] = page
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [User.NewFromJsonDict(x) for x in data]
 
@@ -1739,7 +1738,7 @@ class Api(object):
     if page:
       parameters['page'] = page
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [User.NewFromJsonDict(x) for x in data]
 
@@ -1753,7 +1752,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'statuses/featured.json'
     json = self._FetchUrl(url)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [User.NewFromJsonDict(x) for x in data]
 
@@ -1770,7 +1769,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'users/show/%s.json' % user
     json = self._FetchUrl(url)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return User.NewFromJsonDict(data)
   
@@ -1810,7 +1809,7 @@ class Api(object):
     if page:
       parameters['page'] = page 
     json = self._FetchUrl(url, parameters=parameters)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return [DirectMessage.NewFromJsonDict(x) for x in data]
 
@@ -1831,7 +1830,7 @@ class Api(object):
     url = TWITTER_API_ROOT + 'direct_messages/new.json'
     data = {'text': text, 'user': user}
     json = self._FetchUrl(url, post_data=data)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return DirectMessage.NewFromJsonDict(data)
 
@@ -1850,7 +1849,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'direct_messages/destroy/%s.json' % id
     json = self._FetchUrl(url, post_data={})
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return DirectMessage.NewFromJsonDict(data)
 
@@ -1866,7 +1865,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'friendships/create/%s.json' % user
     json = self._FetchUrl(url, post_data={})
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return User.NewFromJsonDict(data)
 
@@ -1882,7 +1881,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'friendships/destroy/%s.json' % user
     json = self._FetchUrl(url, post_data={})
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return User.NewFromJsonDict(data)
 
@@ -1899,7 +1898,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'favorites/create/%s.json' % status.id
     json = self._FetchUrl(url, post_data={})
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return Status.NewFromJsonDict(data)
 
@@ -1916,7 +1915,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'favorites/destroy/%s.json' % status.id
     json = self._FetchUrl(url, post_data={})
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return Status.NewFromJsonDict(data)
 
@@ -1930,7 +1929,7 @@ class Api(object):
     '''
     url = TWITTER_API_ROOT + 'users/show.json?email=%s' % email
     json = self._FetchUrl(url)
-    data = simplejson.loads(json)
+    data = json.loads(json)
     self._CheckForTwitterError(data)
     return User.NewFromJsonDict(data)
 

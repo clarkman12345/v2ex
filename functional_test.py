@@ -34,7 +34,9 @@ insert_appengine_path()
 
 class NonLoginUserTest(unittest.TestCase):
     def setUp(self):
-        self.dev_appserver = subprocess.Popen(['dev_appserver.py', '.'])
+        self.dev_appserver = subprocess.Popen(['dev_appserver.py',
+                                               '--skip_sdk_update_check=yes',
+                                               '.'])
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(5)
 

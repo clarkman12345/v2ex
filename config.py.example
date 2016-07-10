@@ -4,7 +4,7 @@ mobileme_enabled = False
 mobileme_username = ''
 mobileme_password = ''
 
-if os.environ['SERVER_SOFTWARE'] == 'Development/1.0':
+if os.environ.get('SERVER_SOFTWARE', 'Developement').startswith('Development'):
     twitter_consumer_key = ''
     twitter_consumer_secret = ''
 else:

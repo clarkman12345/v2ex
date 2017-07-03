@@ -5,7 +5,7 @@ import random
 import Cookie
 import logging
 from google.appengine.api import memcache
-from django.utils import simplejson as json
+import json
 
 # Note - please do not use this for production applications
 # see: http://code.google.com/p/appengine-utitlies/

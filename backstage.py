@@ -2288,8 +2288,7 @@ class BackstageRemoveNotificationHandler(BaseHandler):
                     memcache.delete('nn::' + self.member.username_lower)
         self.redirect('/notifications')
 
-def main():
-    application = webapp.WSGIApplication([
+application = webapp.WSGIApplication([
     ('/backstage', BackstageHomeHandler),
     ('/backstage/new/minisite', BackstageNewMinisiteHandler),
     ('/backstage/minisite/(.*)', BackstageMinisiteHandler),
@@ -2313,10 +2312,9 @@ def main():
     ('/backstage/member/(.*)', BackstageMemberHandler),
     ('/backstage/members', BackstageMembersHandler),
     ('/backstage/remove/notification/(.*)', BackstageRemoveNotificationHandler),
-    ],
-                                         debug=True)
-    util.run_wsgi_app(application)
+],
+    debug=True)
 
 
 if __name__ == '__main__':
-    main()
+    util.run_wsgi_app(application)

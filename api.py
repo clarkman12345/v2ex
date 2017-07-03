@@ -10,6 +10,7 @@ import logging
 import string
 import random
 import base64
+import json
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -32,8 +33,6 @@ from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
-
-from django.utils import simplejson as json
 
 template.register_template_library('v2ex.templatetags.filters')
 

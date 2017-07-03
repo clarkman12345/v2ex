@@ -233,17 +233,13 @@ class NotificationsFeedHandler(BaseHandler):
                 self.values['member'] = member
                 self.finalize(template_name='notifications', template_root='feed', template_type='xml')
 
-def main():
-    application = webapp.WSGIApplication([
+application = webapp.WSGIApplication([
     ('/notifications/?', NotificationsHandler),
     ('/notifications/check/(.+)', NotificationsCheckHandler),
     ('/notifications/reply/(.+)', NotificationsReplyHandler),
     ('/notifications/topic/(.+)', NotificationsTopicHandler),
-    ('/n/([a-z0-9]+).xml', NotificationsFeedHandler)
-    ],
-                                         debug=True)
-    util.run_wsgi_app(application)
+    ('/n/([a-z0-9]+).xml', NotificationsFeedHandler)], debug=True)
 
 
 if __name__ == '__main__':
-    main()
+    util.run_wsgi_app(application)

@@ -12,6 +12,7 @@ import random
 import pickle
 import zlib
 import math
+import json
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -37,8 +38,6 @@ from v2ex.babel.da import *
 from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
-
-from django.utils import simplejson as json
 
 from twitter.oauthtwitter import OAuthApi
 from twitter.oauth import OAuthToken
@@ -1228,8 +1227,7 @@ class PageHitHandler(webapp.RequestHandler):
             page.hits = page.hits + 1
             page.put()
 
-def main():
-    application = webapp.WSGIApplication([
+application = webapp.WSGIApplication([
     ('/new/(.*)', NewTopicHandler),
     ('/t/([0-9]+)', TopicHandler),
     ('/t/([0-9]+).txt', TopicPlainTextHandler),
@@ -1239,10 +1237,8 @@ def main():
     ('/edit/reply/([0-9]+)', ReplyEditHandler),
     ('/hit/topic/(.*)', TopicHitHandler),
     ('/hit/page/(.*)', PageHitHandler)
-    ],
-                                         debug=True)
-    util.run_wsgi_app(application)
+], debug=True)
 
 
 if __name__ == '__main__':
-    main()
+    util.run_wsgi_app(application)

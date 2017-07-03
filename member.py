@@ -10,10 +10,10 @@ import hashlib
 import httplib
 import string
 import pickle
+import json
 
 from StringIO import StringIO
 
-from django.utils import simplejson as json
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -886,19 +886,15 @@ class MemberUnblockHandler(webapp.RequestHandler):
                     memcache.set('Member_' + str(member.num), member, 86400)
         self.redirect(go)
 
-def main():
-    application = webapp.WSGIApplication([
+application = webapp.WSGIApplication([
     ('/member/([a-z0-9A-Z\_\-]+)', MemberHandler),
     ('/member/([a-z0-9A-Z\_\-]+).json', MemberApiHandler),
     ('/settings', SettingsHandler),
     ('/settings/password', SettingsPasswordHandler),
     ('/settings/avatar', SettingsAvatarHandler),
     ('/block/(.*)', MemberBlockHandler),
-    ('/unblock/(.*)', MemberUnblockHandler)
-    ],
-                                         debug=True)
-    util.run_wsgi_app(application)
+    ('/unblock/(.*)', MemberUnblockHandler)], debug=True)
 
 
 if __name__ == '__main__':
-    main()
+    util.run_wsgi_app(application)

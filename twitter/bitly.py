@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.utils import simplejson
 import urllib,urllib2
 import urlparse
 import string
+import json
 
 BITLY_BASE_URL = "http://api.bit.ly/"
 BITLY_API_VERSION = "2.0.1"
@@ -60,7 +60,7 @@ class Api(object):
             
         request = self._getURL("shorten",longURL)
         result = self._fetchUrl(request)
-        json = simplejson.loads(result)
+        json = json.loads(result)
         self._CheckForError(json)
         
         res = []
@@ -79,7 +79,7 @@ class Api(object):
         """ Given a bit.ly url or hash, return long source url """
         request = self._getURL("expand",shortURL)
         result = self._fetchUrl(request)
-        json = simplejson.loads(result)
+        json = json.loads(result)
         self._CheckForError(json)
         return json['results'][string.split(shortURL, '/')[-1]]['longUrl']
 
@@ -91,7 +91,7 @@ class Api(object):
         """
         request = self._getURL("info",shortURL)
         result = self._fetchUrl(request)
-        json = simplejson.loads(result)
+        json = json.loads(result)
         self._CheckForError(json)
         return json['results'][string.split(shortURL, '/')[-1]]
 
@@ -99,7 +99,7 @@ class Api(object):
         """ Given a bit.ly url or hash, return traffic and referrer data.  """
         request = self._getURL("stats",shortURL)
         result = self._fetchUrl(request)
-        json = simplejson.loads(result)
+        json = json.loads(result)
         self._CheckForError(json)
         return Stats.NewFromJsonDict(json['results'])
 
@@ -107,7 +107,7 @@ class Api(object):
         """ Get a list of bit.ly API error codes. """
         request = self._getURL("errors","")
         result = self._fetchUrl(request)
-        json = simplejson.loads(result)
+        json = json.loads(result)
         self._CheckForError(json)
         return json['results']
         

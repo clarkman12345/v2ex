@@ -13,6 +13,7 @@ import random
 import pickle
 import math
 
+
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
@@ -41,7 +42,7 @@ from v2ex.babel.ext.sessions import Session
 
 from v2ex.babel.handlers import BaseHandler
 
-from django.utils import simplejson as json
+import json
 
 from v2ex.babel.ext import captcha
 
@@ -72,7 +73,7 @@ class HomeHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
+            self.response.set_cookie('auth', member.auth, max_age=365)
             template_values['member'] = member
             try:
                 blocked = pickle.loads(member.blocked.encode('utf-8'))
@@ -335,7 +336,7 @@ class SigninHandler(webapp.RequestHandler):
                 q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1 AND password = :2", u.lower(), p_sha1)
             if (q.count() == 1):
                 member = q[0]
-                self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
+                self.response.set_cookie('auth', member.auth, max_age=365)
                 next = self.request.get('next').strip()
                 host = self.request.host + '/'
                 if next.rfind(host)>0 and not next.rfind('/sign'):
@@ -356,7 +357,7 @@ class SigninHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'signin.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
-        
+
 class SignupHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
@@ -372,6 +373,10 @@ class SignupHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['errors'] = 0
         template_values['captchahtml'] = chtml
+        template_values['recaptcha_args'] = {
+            'public_key': config.recaptcha_public_key,
+            'use_ssl': False,
+            'error': None}
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if browser['ios']:
@@ -1198,8 +1203,7 @@ class ChangesHandler(webapp.RequestHandler):
         output = template.render(path, template_values)
         self.response.out.write(output)
 
-def main():
-    application = webapp.WSGIApplication([
+application = webapp.WSGIApplication([
     ('/', HomeHandler),
     ('/planes/?', PlanesHandler),
     ('/recent', RecentHandler),
@@ -1215,11 +1219,8 @@ def main():
     ('/q/(.*)', SearchHandler),
     ('/_dispatcher', DispatcherHandler),
     ('/changes', ChangesHandler),
-    ('/(.*)', RouterHandler)
-    ],
-                                         debug=True)
-    util.run_wsgi_app(application)
+    ('/(.*)', RouterHandler)], debug=True)
 
 
 if __name__ == '__main__':
-    main()
+    util.run_wsgi_app(application)
